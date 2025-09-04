@@ -27,11 +27,39 @@ public class OrganizationServiceImpl implements OrganizationService {
     }
 
     @Override
+    public OrganizationResponseDto getOrgById(Long id) {
+        Organization org = orgRepo.findById(id)
+                .orElseThrow(()-> new RuntimeException("Organization not found" + id));
+
+        return mapToResponse(org);
+    }
+
+    @Override
     public List<OrganizationResponseDto> getOrgs() {
         return orgRepo.findAll()
                 .stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public OrganizationResponseDto updateOrg(OrganizationRequestDto orgDto, Long id) {
+        Organization org = orgRepo.findById(id)
+                        .orElseThrow(()-> new RuntimeException("Organization not found" + id));
+
+        org.setOrgName(orgDto.getOrgName());
+        org.setOrgEmail(orgDto.getOrgEmail());
+
+        Organization saved = orgRepo.save(org);
+        return mapToResponse(saved);
+    }
+
+    @Override
+    public OrganizationResponseDto deleteOrg(Long id) {
+        Organization org = orgRepo.findById(id)
+                .orElseThrow(() -> new RuntimeException("Organization not found" + id));
+        orgRepo.delete(org);
+        return mapToResponse(org);
     }
 
     private OrganizationResponseDto mapToResponse(Organization org) {

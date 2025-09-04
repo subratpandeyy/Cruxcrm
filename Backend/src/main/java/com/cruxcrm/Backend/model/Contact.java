@@ -17,6 +17,10 @@ public class Contact {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long contactId;
 
+    private String contactName;
+    private String contactEmail;
+    private String contactPhone;
+
     @ManyToOne
     @JoinColumn(name = "account_id", referencedColumnName = "accountId")
     private Account account;
@@ -31,5 +35,4 @@ public class Contact {
 
     @ManyToMany(mappedBy = "contacts")
     private List<Deal> deals;
-
 }
